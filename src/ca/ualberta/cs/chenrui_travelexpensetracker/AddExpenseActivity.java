@@ -42,7 +42,7 @@ public class AddExpenseActivity extends ShowExpenseListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_add);
+		setContentView(R.layout.activity_add_expense);
 		
 		itemText = (EditText)findViewById(R.id.editEventText);
 		amountText = (EditText)findViewById(R.id.editAmountText);
@@ -93,19 +93,9 @@ public class AddExpenseActivity extends ShowExpenseListActivity {
 		dataCategoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		addExpenseCategorySpinner.setAdapter(dataCategoryAdapter);
 
-		/*
-		// Spinner item selection Listener
-		addListenerOnSpinnerItemSelection();
-
-		// Button click Listener
-		addListenerOnButton();*/
-
-		/*
-		adapter = new ExpenseAdapter(this, R.layout.list_claim, claims);
-		oldClaimsList.setAdapter(adapter);
-		adapter.notifyDataSetChanged();*/
 		
-		oldExpense = getForEditExpense();
+		//oldExpense = getForEditExpense();
+		
 		//System.out.println(oldExpense);
 		
 		if(oldExpense!=null){
@@ -186,15 +176,16 @@ public class AddExpenseActivity extends ShowExpenseListActivity {
 				//System.out.println(testDate);
 				
 				
+				/*
 			if (errorType.length() == 0) {		
-				System.out.println(oldExpense);
+				//System.out.println(oldExpense);
 				
 				if (oldExpense!=null){
-					int position = StartUpActivity.getForEditExpensePosition();
+					int position = ShowClaimListActivity.OpenedClaimPosition;
 					// subtract the old expense amount from total
-					getOpenClaim().addToTotal(new Currency(expense.getCurrency(),(0 - expense.getAmount())));
-					getClaims().remove(position);
-					getClaims().add(position, expense);
+					ShowClaimListActivity.OpenedClaim.addToTotal(new Currency(expense.getCurrency(),(0 - expense.getAmount())));
+					ShowClaimListActivity.OpenedClaim.remove(position);
+					ShowClaimListActivity.ClaimList.add(position, expense);
 					getOpenClaim().setExpenseList(getClaims());
 					
 				} else {
@@ -204,7 +195,7 @@ public class AddExpenseActivity extends ShowExpenseListActivity {
 					//forSavingClaimList.add(forSavingClaimListPosition,)
 				}
 				// add currency to count total
-				getOpenClaim().addToTotal(new Currency(expense.getCurrency(),expense.getAmount()));
+				OpenClaim().addToTotal(new Currency(expense.getCurrency(),expense.getAmount()));
 				//System.out.println(expense.getAmount());
 				
 				getTotalAdapter().notifyDataSetChanged();
@@ -212,42 +203,14 @@ public class AddExpenseActivity extends ShowExpenseListActivity {
 				getAdapter().notifyDataSetChanged();
 
 				//saveInFile(expense, new Date(System.currentTimeMillis()));
-				saveInFile(null, new Date(System.currentTimeMillis()));
+				saveInFile();
 
 				Toast.makeText(getBaseContext(), "Expense added",
 						Toast.LENGTH_SHORT).show();
 				finish();
 			} else {
 				Toast.makeText(getBaseContext(),errorType,Toast.LENGTH_SHORT).show();
-			}
-				/*
-				Itent intent = new Intent(AddActivity.this,StartUpActivity.class);
-				startActivity(intent);*/
-				
-			/*
-			case R.id.addEventDateSettingButton:
-				
-				Date nowDate = new Date(System.currentTimeMillis());
-				String nowDateStr = nowDate.toString();
-				String[] nowDateList = nowDateStr.split(" ");
-				int year = nowDateList[5];
-				int month = nowDateList[0];
-				int date = nowDateList[];
-				System.out.println(year);
-				
-				DatePickerDialog datePicker = new DatePickerDialog(
-						AddActivity.this, new OnDateSetListener(){
-							@Override
-							public void onDateSet(DatePicker view,int year,int monthOfYear,int dayOfMonth){
-								AddEventDateSettingButton.setText(new StringBuilder().append(day).append("/")
-			     														.append(month).append("/").append(year));
-							}
-						},2015,month,date);
-				datePicker.show();
-				break;
-			case R.id.addEventTimeSettingButton:
-				
-				break;*/
+			}*/
 
 		}
 	}
@@ -257,7 +220,7 @@ public class AddExpenseActivity extends ShowExpenseListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.add, menu);
+		getMenuInflater().inflate(R.menu.add_expense, menu);
 		return true;
 	}
 	
@@ -272,43 +235,8 @@ public class AddExpenseActivity extends ShowExpenseListActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
 	
-	
-	//http://androidexample.com/Spinner_Basics_-_Android_Example/index.php?view=article_discription&aid=82&aaid=105 1.28.2015
-	// Spinner
-	//private Spinner spinner1;
-	//private Button btnSubmit;
-
-	/*
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
-
-		spinner1 = (Spinner) findViewById(R.id.spinner1);
-		List<String> list = new ArrayList<String>();
-		list.add("Android");
-		list.add("Java");
-		list.add("Spinner Data");
-		list.add("Spinner Adapter");
-		list.add("Spinner Example");
-
-		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, list);
-
-		dataAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-		spinner1.setAdapter(dataAdapter);
-
-		// Spinner item selection Listener
-		addListenerOnSpinnerItemSelection();
-
-		// Button click Listener
-		addListenerOnButton();
-
-	}*/
-
 	// Add spinner data
 
 	public void addListenerOnSpinnerItemSelection() {
@@ -321,22 +249,6 @@ public class AddExpenseActivity extends ShowExpenseListActivity {
 	public void addListenerOnButton() {
 
 		addExpenseCurrencySpinner = (Spinner) findViewById(R.id.addExpenseCurrencySpinner);
-
-		/*btnSubmit = (Button) findViewById(R.id.btnSubmit);
-
-		btnSubmit.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				Toast.makeText(
-						SpinnerExample.this,
-						"On Button Click : " + "\n"
-								+ String.valueOf(spinner1.getSelectedItem()),
-						Toast.LENGTH_LONG).show();
-			}
-
-		});*/
 
 	}
 	
