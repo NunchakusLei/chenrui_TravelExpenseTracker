@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin" />
+
+    <LinearLayout
+        android1:layout_width="match_parent"
+        android1:layout_height="50dp" >
+
+        <EditText
+            android1:id="@+id/editEventText"
+            android1:layout_width="match_parent"
+            android1:layout_height="fill_parent"
+            android1:ems="10"
+            android1:hint="Enter a Item" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android1:layout_width="match_parent"
+        android1:layout_height="wrap_content" >
+
+        <Spinner
+            android1:id="@+id/addExpenseCurrencySpinner"
+            android1:layout_width="wrap_content"
+            android1:layout_height="wrap_content" />
+
+        <EditText
+            android1:id="@+id/editAmountText"
+            android1:layout_width="130dp"
+            android1:layout_height="wrap_content"
+            android1:layout_weight="1"
+            android1:ems="10"
+            android1:hint="Enter amount"
+            android1:inputType="numberDecimal" >
+
+            <requestFocus />
+        </EditText>
+
+        <Spinner
+            android1:id="@+id/addExpenseCategorySpinner"
+            android1:layout_width="wrap_content"
+            android1:layout_height="fill_parent"
+            android1:layout_weight="1" />
+
+    </LinearLayout>
+
+    <EditText
+        android1:id="@+id/addExpenseDescriptionEditView"
+        android1:layout_width="match_parent"
+        android1:layout_height="84dp"
+        android1:hint="Description"
+        android1:text="" />
+
+    <DatePicker
+        android1:id="@+id/addExpenseDatePicker"
+        android1:layout_width="match_parent"
+        android1:layout_height="130dp"
+        android1:calendarViewShown="false" />
+
+    <TimePicker
+        android1:id="@+id/addExpenseTimePicker"
+        android1:layout_width="match_parent"
+        android1:layout_height="130dp" />
+
+    <Button
+        android1:id="@+id/comfirmAddEventButton"
+        android1:layout_width="wrap_content"
+        android1:layout_height="wrap_content"
+        android1:text="comfirm" />
+
+</LinearLayout>
