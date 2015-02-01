@@ -3,16 +3,13 @@ package ca.ualberta.cs.chenrui_travelexpensetracker;
 import java.util.ArrayList;
 import java.util.Date;
 
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.app.DatePickerDialog;
-import android.app.DatePickerDialog.OnDateSetListener;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -20,7 +17,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 public class AddExpenseActivity extends ShowExpenseListActivity {
 	private EditText itemText;
@@ -38,6 +34,8 @@ public class AddExpenseActivity extends ShowExpenseListActivity {
 	//private Button AddEventTimeSettingButton;
 	private Date expenseDate;
 	private Expense oldExpense;
+	
+	private boolean isOpenedinLocal;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,11 +92,13 @@ public class AddExpenseActivity extends ShowExpenseListActivity {
 		addExpenseCategorySpinner.setAdapter(dataCategoryAdapter);
 
 		
-		//oldExpense = getForEditExpense();
-		
+		//expenseListAdapter.notifyDataSetChanged();
 		//System.out.println(oldExpense);
-		
-		if(oldExpense!=null){
+		//System.out.println(isAExpenseOpened);
+		isOpenedinLocal = isAExpenseOpened;
+		if(isAExpenseOpened){
+			oldExpense = ShowClaimListActivity.OpenedClaim.getExpenseList().get(OpenedExpensePosition);
+			
 			itemText.setText(oldExpense.getItem());
 			amountText.setText(""+(oldExpense.getAmount()));
 			addExpenseDescriptionEditView.setText(oldExpense.getDescription());
@@ -128,7 +128,7 @@ public class AddExpenseActivity extends ShowExpenseListActivity {
 		public void onClick (View view){
 			// code to add save content
 			setResult(RESULT_OK);
-			
+			double amount = 0;
 
 			Expense expense = new Expense();
 			String errorType = "";
@@ -139,70 +139,70 @@ public class AddExpenseActivity extends ShowExpenseListActivity {
 				errorType += "Enter a Item! ";
 			}
 				
-			expense.setCurrency(addExpenseCurrencySpinner.getSelectedItem().toString());
 			expense.setCategory(addExpenseCategorySpinner.getSelectedItem().toString());
 			expense.setDescription(addExpenseDescriptionEditView.getText().toString());
 				
 			// set up amount
 			try{
-				expense.setAmount(Float.parseFloat(amountText.getText().toString()));
+				amount = Double.parseDouble(amountText.getText().toString());
 			}catch(NumberFormatException e){
 				errorType += "  Enter Amount!";
 			}
+			
+			expense.setCurrency(new Currency(addExpenseCurrencySpinner.getSelectedItem().toString(),amount));
+			
+			
+			// set up expenseDate
+			expenseDate = new Date();
+			// expenseDate = new Date(addExpenseDatePicker.getYear() -
+			// 1900,addExpenseDatePicker.getMonth(),addExpenseDatePicker.getDayOfMonth());
+			expenseDate.setYear(addExpenseDatePicker.getYear() - 1900);
+			expenseDate.setMonth(addExpenseDatePicker.getMonth());
+			expenseDate.setDate(addExpenseDatePicker.getDayOfMonth());
+			expenseDate.setHours(addExpenseTimePicker.getCurrentHour());
+			expenseDate.setMinutes(addExpenseTimePicker.getCurrentMinute());
+			/*
+			 * System.out.println(expenseDate);
+			 * expenseDate.setTime(addExpenseDatePicker.get());
+			 * System.out.println(expenseDate);
+			 * //expense.setDate(addExpenseDatePicker.getDisplay());
+			 * System.out.println(addExpenseDatePicker.getYear());
+			 * System.out.println(addExpenseDatePicker.getDayOfMonth());
+			 * System.out.println(addExpenseDatePicker.getMonth());
+			 */
+			expense.setDate(expenseDate);
 				
-				// set up expenseDate
-				expenseDate = new Date();
-				//expenseDate = new Date(addExpenseDatePicker.getYear() - 1900,addExpenseDatePicker.getMonth(),addExpenseDatePicker.getDayOfMonth());
-				expenseDate.setYear(addExpenseDatePicker.getYear()-1900);
-				expenseDate.setMonth(addExpenseDatePicker.getMonth());
-				expenseDate.setDate(addExpenseDatePicker.getDayOfMonth());
-				expenseDate.setHours(addExpenseTimePicker.getCurrentHour());
-				expenseDate.setMinutes(addExpenseTimePicker.getCurrentMinute());
-				/*
-				System.out.println(expenseDate);
-				expenseDate.setTime(addExpenseDatePicker.get());
-				System.out.println(expenseDate);
-				//expense.setDate(addExpenseDatePicker.getDisplay());
-				System.out.println(addExpenseDatePicker.getYear());
-				System.out.println(addExpenseDatePicker.getDayOfMonth());
-				System.out.println(addExpenseDatePicker.getMonth());*/
-				expense.setDate(expenseDate);
-				
-				
-				expense.setChangeDate(new Date(System.currentTimeMillis()));
+			expense.setChangeDate(new Date(System.currentTimeMillis()));
 			
 				
-				//Date testDate = new Date(System.currentTimeMillis());
-				//System.out.println(testDate);
+			//Date testDate = new Date(System.currentTimeMillis());
+			//System.out.println(testDate);
 				
 				
-				/*
+				
 			if (errorType.length() == 0) {		
 				//System.out.println(oldExpense);
+				ArrayList<Expense> newExpenseList=ShowClaimListActivity.OpenedClaim.getExpenseList();
 				
-				if (oldExpense!=null){
-					int position = ShowClaimListActivity.OpenedClaimPosition;
+				System.out.println(isOpenedinLocal);
+				if (isOpenedinLocal){
 					// subtract the old expense amount from total
-					ShowClaimListActivity.OpenedClaim.addToTotal(new Currency(expense.getCurrency(),(0 - expense.getAmount())));
-					ShowClaimListActivity.OpenedClaim.remove(position);
-					ShowClaimListActivity.ClaimList.add(position, expense);
-					getOpenClaim().setExpenseList(getClaims());
+					Currency oldCurrency = newExpenseList.get(OpenedExpensePosition).getCurrency();
+					oldCurrency.setAmount(0-oldCurrency.getAmount());
+					ShowClaimListActivity.OpenedClaim.addToTotal(oldCurrency);
+					// change expense list
+					newExpenseList.remove(OpenedExpensePosition);
+					newExpenseList.add(OpenedExpensePosition, expense);
 					
 				} else {
-					getClaims().add(0, expense);
-					
-					//getClaims();
-					//forSavingClaimList.add(forSavingClaimListPosition,)
+					newExpenseList.add(0, expense);
 				}
-				// add currency to count total
-				OpenClaim().addToTotal(new Currency(expense.getCurrency(),expense.getAmount()));
-				//System.out.println(expense.getAmount());
-				
-				getTotalAdapter().notifyDataSetChanged();
-				// getExpenseList().add(0,expense.toString());
-				getAdapter().notifyDataSetChanged();
-
-				//saveInFile(expense, new Date(System.currentTimeMillis()));
+				// prepare for saving data
+				ShowClaimListActivity.OpenedClaim.setExpenseList(newExpenseList);
+				ShowClaimListActivity.OpenedClaim.addToTotal(expense.getCurrency());
+				ShowClaimListActivity.ClaimList.remove(ShowClaimListActivity.OpenedClaimPosition);
+				ShowClaimListActivity.ClaimList.add(ShowClaimListActivity.OpenedClaimPosition,ShowClaimListActivity.OpenedClaim);
+				isOpenedinLocal = false; 
 				saveInFile();
 
 				Toast.makeText(getBaseContext(), "Expense added",
@@ -210,7 +210,7 @@ public class AddExpenseActivity extends ShowExpenseListActivity {
 				finish();
 			} else {
 				Toast.makeText(getBaseContext(),errorType,Toast.LENGTH_SHORT).show();
-			}*/
+			}
 
 		}
 	}

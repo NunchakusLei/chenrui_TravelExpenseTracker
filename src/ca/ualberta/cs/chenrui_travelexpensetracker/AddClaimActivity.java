@@ -18,6 +18,10 @@ public class AddClaimActivity extends ShowClaimListActivity {
 	private DatePicker addClaimEndDatePicker;
 	private EditText addClaimDescriptionEditText;
 	
+	private Claim oldClaim;
+	
+	private boolean isAClaimOpenedLocal;
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -53,6 +57,31 @@ public class AddClaimActivity extends ShowClaimListActivity {
 		ButtonListener addClaimButtonListener = new ButtonListener();
 		addClaimButton.setOnClickListener(addClaimButtonListener);
 		
+		
+		//System.out.println(isAClaimOpened);
+		isAClaimOpenedLocal = isAClaimOpened;
+		if(isAClaimOpened){
+			oldClaim = OpenedClaim;
+			
+			addClaimButton.setText("Finish edit claim");
+			addClaimNameEeditText.setText(oldClaim.getName());
+			addClaimDescriptionEditText.setText(oldClaim.getDescription());
+			
+			//http://stackoverflow.com/questions/2198410/how-to-change-title-of-activity-in-android 2015.1.29.
+			setTitle("Edit Claims");
+			
+			//http://stackoverflow.com/questions/6451837/how-do-i-set-the-current-date-in-a-datepicker 2015.1.29.
+			
+			addClaimStartDdatePicker.updateDate(
+					oldClaim.getStartDate().getYear() + 1900, oldClaim.getStartDate()
+							.getMonth(), oldClaim.getStartDate().getDate());
+			addClaimStartDdatePicker.updateDate(
+					oldClaim.getStartDate().getYear() + 1900, oldClaim.getStartDate()
+							.getMonth(), oldClaim.getStartDate().getDate());
+
+			isAClaimOpened = false;
+		}
+		
 	}
 	
 	class ButtonListener implements View.OnClickListener{
@@ -83,15 +112,23 @@ public class AddClaimActivity extends ShowClaimListActivity {
 			claim.setStartDate(startDate);
 			claim.setEndDate(endDate);
 			claim.setDescription(description);
-			claim.setStatus("returned");
+			claim.setStatus("In Progress");
+			
+			if(isAClaimOpenedLocal){
+				claim.setExpenseList(oldClaim.getExpenseList());
+				claim.setTotalCurrency(oldClaim.getTotalCurrency());
+				ClaimList.remove(OpenedClaimPosition);
+				isAClaimOpenedLocal = false;
+				OpenedClaim = claim;
+			}
 			
 			// add new to form sorted claim list
 			ClaimList.add(findSortedPosition(claim,ClaimList),claim);
 			saveInFile();
 			
+			
 			// show to user
 			Toast.makeText(getBaseContext(), "Claim added",Toast.LENGTH_SHORT).show();
-			
 			
 			finish();
 		}

@@ -9,7 +9,6 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -23,9 +22,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -42,6 +41,7 @@ public class ShowClaimListActivity extends Activity {
 	private ListView ClaimListListView;
 	public static Claim OpenedClaim;
 	public static int OpenedClaimPosition;
+	public static boolean isAClaimOpened = false;
 	
 	
 	@Override
@@ -86,6 +86,10 @@ public class ShowClaimListActivity extends Activity {
 			Intent intent = new Intent(ShowClaimListActivity.this, ShowExpenseListActivity.class);
 			OpenedClaim = ClaimList.get(position);
 			OpenedClaimPosition = position;
+			isAClaimOpened = true;
+			
+			//System.out.println(isAClaimOpened);
+			
 			startActivity(intent); 
 		 }
 	}
@@ -134,8 +138,9 @@ public class ShowClaimListActivity extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		ClaimList = loadFromFile();
+		//isAClaimOpened = false;
 		
+		ClaimList = loadFromFile();
 		/*
 		Claim test = new Claim();
 		//test.setName("testng");
@@ -158,8 +163,6 @@ public class ShowClaimListActivity extends Activity {
 		ClaimListAdapter = new ClaimAdapter(this,R.layout.list_claim, ClaimList);
 		ClaimListListView.setAdapter(ClaimListAdapter);
 		ClaimListAdapter.notifyDataSetChanged();
-		
-		
 	}
 	
 	
@@ -193,7 +196,7 @@ public class ShowClaimListActivity extends Activity {
 	       listClaimEndDateTextView.setText((new SimpleDateFormat ("yyyy.MM.dd")).format(claim.getEndDate()));
 	       listClaimTotalListView.setText(claim.TotalCurrencyListToString());
 	       listClaimNameTextView.setText(claim.getName());
-	       listClaimStatusTextView.setText(listClaimStatusTextView.getText().toString()+"  "+claim.getStatus());
+	       listClaimStatusTextView.setText("Status: "+claim.getStatus());
 
 	       // Return the completed view to render on screen
 	       return view;

@@ -4,8 +4,7 @@ import java.util.Date;
 
 public class Expense {
 	protected String item;
-	protected float amount;
-	protected String currency;
+	protected Currency currency;
 	protected Date date;
 	protected Date changeDate;
 	protected String category;
@@ -24,7 +23,7 @@ public class Expense {
 	@Override
 	public String toString(){
 		String str = new String();
-		str = this.item + " -------> $" + "" + this.amount;
+		str = this.item + " -------> $" + "" + this.currency.getAmount();
 		return str;
 	}
 	
@@ -55,19 +54,19 @@ public class Expense {
 
 
 
-	public float getAmount() {
-		return amount;
+	public double getAmount() {
+		return this.currency.getAmount();
 	}
-	public void setAmount(float amount) {
-		this.amount = amount;
+	public void setAmount(double amount) {
+		this.currency.setAmount(amount);
 	}
 
 
 
-	public String getCurrency() {
+	public Currency getCurrency() {
 		return currency;
 	}
-	public void setCurrency(String currency) {
+	public void setCurrency(Currency currency) {
 		this.currency = currency;
 	}
 

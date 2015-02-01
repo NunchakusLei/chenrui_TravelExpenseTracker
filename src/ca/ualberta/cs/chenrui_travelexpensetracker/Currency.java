@@ -37,6 +37,6 @@ public class Currency {
 	}
 	
 	public boolean isSameType(Currency currency){
-		return this.type==currency.getType();	
+		return this.type.equals(currency.getType());	
 	}
 }

@@ -43,25 +43,23 @@ public class Claim {
 	public void addToTotal(Currency add){
 		Currency newAdd = new Currency(add.getType());
 		double amount = add.getAmount();
-		/*
-		System.out.println(amount);
-		System.out.println(newAdd);*/
 		
 		int i;
-		
 		for (i = 0; i<this.totalCurrencyList.size(); i++){
-			if (this.totalCurrencyList.get(i).isSameType(add)){
+			if (this.totalCurrencyList.get(i).getType().equals(add.getType())){
 				amount += this.totalCurrencyList.get(i).getAmount();
 				newAdd.setAmount(amount);
 				this.totalCurrencyList.remove(i);
 			}
 		}
 		
-		if (amount==add.getAmount()){
-			newAdd.setAmount(amount);
-			this.totalCurrencyList.add(newAdd);
-		} else {
-			this.totalCurrencyList.add(0,newAdd);
+		if (amount != 0) {
+			if (amount == add.getAmount()) {
+				newAdd.setAmount(amount);
+				this.totalCurrencyList.add(newAdd);
+			} else {
+				this.totalCurrencyList.add(0, newAdd);
+			}
 		}
 	}
 
