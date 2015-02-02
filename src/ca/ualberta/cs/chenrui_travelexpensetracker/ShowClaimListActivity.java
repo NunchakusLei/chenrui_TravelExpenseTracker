@@ -131,6 +131,7 @@ public class ShowClaimListActivity extends Activity {
 		@Override
 		public void onClick(View view) {
 			Intent intent = new Intent(ShowClaimListActivity.this, AddClaimActivity.class);
+			isAClaimOpened = false;
 			startActivity(intent);
 		}
 	}
